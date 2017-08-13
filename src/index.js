@@ -1,4 +1,3 @@
-'use strict';
 const feathers = require('feathers');
 const async = require('async');
 const hooks = require('feathers-hooks');
