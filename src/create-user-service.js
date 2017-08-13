@@ -4,7 +4,7 @@ const Ajv = require('ajv');
 const authHooks = require('feathers-authentication-local').hooks;
 const commonHooks = require('feathers-hooks-common');
 const service = require('feathers-nedb');
-const { setCreatedAt, setUpdatedAt, unless, remove, validateSchema } = commonHooks;
+const { setCreatedAt, setUpdatedAt, unless, discard, validateSchema } = commonHooks;
 
 module.exports = function createUserService(app) {
     const path = '/users';
@@ -15,9 +15,22 @@ module.exports = function createUserService(app) {
         create: [validateSchema(userSchema(), Ajv), authHooks.hashPassword(), setCreatedAt(), setUpdatedAt()]
     });
     userService.after({
-        all: unless(hook => hook.method === 'find', remove('password'))
+        all: [unless(hook => hook.method === 'find', discard('password')), customSyncHook, customAsyncHook]
     });
 };
+
+function customSyncHook(asd) {
+    console.log("I'm a custom sync hook!");
+}
+
+function customAsyncHook() {
+    return new Promise(function(resolve) {
+        setImmediate(() => {
+            console.log("I'm a custom async hook!");
+            resolve();
+        });
+    });
+}
 
 function userModel() {
     return new NeDB({

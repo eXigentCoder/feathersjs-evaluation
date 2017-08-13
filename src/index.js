@@ -2,12 +2,38 @@ const feathers = require('feathers');
 const async = require('async');
 const hooks = require('feathers-hooks');
 const createUserService = require('./create-user-service');
+const util = require('util');
 
 const app = feathers().configure(hooks()).configure(services);
 
 function services() {
     let app = this;
     createUserService(app);
+}
+
+//can add global hooks too:
+app.hooks({
+    before: {
+        all: serviceCalled
+    },
+    after: {
+        all: serviceComplete
+    },
+    error: {
+        all: serviceError
+    }
+});
+
+function serviceCalled({ type, method, path, params }) {
+    console.log('%s %s %s serviceCalled with params:', type, method, path, params);
+}
+
+function serviceComplete({ type, method, path, original, result }) {
+    console.log('%s %s %s serviceComplete, result:', type, method, path, util.inspect(original), util.inspect(result));
+}
+
+function serviceError({ error, type, method, path, params }) {
+    console.error('%s on %s %s with params:%s \n\n', type, method, path, util.inspect(params), error);
 }
 
 const userService = app.service('/users');
