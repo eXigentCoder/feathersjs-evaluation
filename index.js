@@ -38,10 +38,9 @@ function ensureUserExists(user, callback) {
             return callback(err);
         }
         if (foundUsers.length > 0) {
-            console.log('User already existed', foundUsers);
+            console.log('User "%s" already existed.', foundUsers[0].email);
             return callback();
         }
-        //userService.create(user).then(userCreated).catch(err => console.error(err));
         userService.create(user, userCreated);
     }
 
@@ -49,7 +48,10 @@ function ensureUserExists(user, callback) {
         if (err) {
             return callback(err);
         }
-        console.log('User created\n', createdUser);
+        if (!createdUser) {
+            return callback(new Error('createdUser was falsy'));
+        }
+        console.log('User "%s" created.', createdUser.email);
         callback();
     }
 }
