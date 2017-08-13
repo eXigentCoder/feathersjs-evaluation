@@ -8,8 +8,7 @@ const { setCreatedAt, setUpdatedAt, unless, discard, validateSchema } = commonHo
 
 module.exports = function createUserService(app) {
     const path = '/users';
-    const userServiceMiddleware = service({ Model: userModel() });
-    app.use(path, userServiceMiddleware);
+    app.use(path, service({ Model: userModel() }));
     const userService = app.service(path);
     userService.before({
         create: [validateSchema(userSchema(), Ajv), authHooks.hashPassword(), setCreatedAt(), setUpdatedAt()]

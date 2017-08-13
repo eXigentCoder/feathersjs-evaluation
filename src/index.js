@@ -12,17 +12,19 @@ function services() {
 }
 
 //can add global hooks too:
-app.hooks({
-    before: {
-        all: serviceCalled
-    },
-    after: {
-        all: serviceComplete
-    },
-    error: {
-        all: serviceError
-    }
-});
+if (process.env.DEBUG) {
+    app.hooks({
+        before: {
+            all: serviceCalled
+        },
+        after: {
+            all: serviceComplete
+        },
+        error: {
+            all: serviceError
+        }
+    });
+}
 
 function serviceCalled({ type, method, path, params }) {
     console.log('%s %s %s serviceCalled with params:', type, method, path, params);
