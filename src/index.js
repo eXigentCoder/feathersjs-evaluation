@@ -15,9 +15,8 @@ const userService = app.service('/users');
 async.series([addTestData], function(err) {
     if (err) {
         console.error(err);
-        process.exit(1);
+        throw err;
     }
-    process.exit(0);
 });
 
 function addTestData(callback) {
