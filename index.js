@@ -31,7 +31,7 @@ function addTestData(callback) {
 }
 
 function ensureUserExists(user, callback) {
-    userService.find({ email: user.email }, userFound);
+    userService.find({ query: { email: user.email } }, userFound);
 
     function userFound(err, foundUsers) {
         if (err) {
