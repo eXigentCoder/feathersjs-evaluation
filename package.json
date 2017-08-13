@@ -12,8 +12,12 @@
   "author": "Ryan Kotzen <potz666@gmail.com> (http://blog.exigentcoder.com)",
   "license": "MIT",
   "dependencies": {
+    "ajv": "5.2.2",
     "async": "2.5.0",
     "feathers": "2.1.7",
+    "feathers-authentication-local": "0.4.4",
+    "feathers-hooks": "2.0.2",
+    "feathers-hooks-common": "3.7.1",
     "feathers-nedb": "2.6.2",
     "nedb": "1.8.0"
   }

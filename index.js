@@ -1,23 +1,17 @@
 'use strict';
-
 const feathers = require('feathers');
-const NeDB = require('nedb');
-const service = require('feathers-nedb');
 const async = require('async');
-const dbPath = './data/users.db';
+const hooks = require('feathers-hooks');
+const createUserService = require('./create-user-service');
 
-const app = feathers().configure(services);
-const userService = app.service('/users');
+const app = feathers().configure(hooks()).configure(services);
 
 function services() {
-    this.use('/users', service({ Model: userModel() }));
-    function userModel() {
-        return new NeDB({
-            filename: dbPath,
-            autoload: true
-        });
-    }
+    let app = this;
+    createUserService(app);
 }
+
+const userService = app.service('/users');
 
 async.series([addTestData], function(err) {
     if (err) {
@@ -52,7 +46,7 @@ function ensureUserExists(user, callback) {
         if (err) {
             return callback(err);
         }
-        console.log('User created');
+        console.log('User created\n', createdUser);
         callback();
     }
 }
