@@ -15,15 +15,17 @@ const userService = app.service('/users');
 
 async.series([addTestData], function(err) {
     if (err) {
-        throw err;
+        console.error(err);
+        process.exit(1);
     }
+    process.exit(0);
 });
 
 function addTestData(callback) {
     const usersToExist = [
-        { email: 'jane.doe@gmail.com', password: '11111', role: 'admin' },
-        { email: 'john.doe@gmail.com', password: '22222', role: 'user' },
-        { email: 'judy.doe@gmail.com', password: '33333', role: 'user' }
+        { email: 'jane.doe@gmail.com', password: '11111111', role: 'admin' },
+        { email: 'john.doe@gmail.com', password: '22222222', role: 'user' },
+        { email: 'judy.doe@gmail.com', password: '33333333', role: 'user' }
     ];
     async.each(usersToExist, ensureUserExists, callback);
 }
@@ -39,6 +41,7 @@ function ensureUserExists(user, callback) {
             console.log('User already existed', foundUsers);
             return callback();
         }
+        //userService.create(user).then(userCreated).catch(err => console.error(err));
         userService.create(user, userCreated);
     }
 
